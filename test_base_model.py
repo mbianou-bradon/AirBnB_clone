@@ -1,10 +1,4 @@
 #!/usr/bin/python3
-
-import unittest
-import sys
-import os
-
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from models.base_model import BaseModel
 
 my_model = BaseModel()
