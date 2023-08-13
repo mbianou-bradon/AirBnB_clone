@@ -1,6 +1,7 @@
 #!usr/bin/python3
 """ Unit Testing baseModel class """
 
+import os
 import unittest
 from models.base_model import BaseModel
 
