@@ -4,6 +4,7 @@
 import unittest
 from models.base_model import BaseModel
 
+
 class TestBaseModel(unittest.TestCase):
     def setUp(self):
         self.base_model = BaseModel()
@@ -40,6 +41,7 @@ class TestBaseModel(unittest.TestCase):
         obj_dict = self.base_model.to_dict()
         self.assertIn('updated_at', obj_dict)
         self.assertIsInstance(obj_dict['updated_at'], str)
+
 
 if __name__ == '__main__':
     unittest.main()

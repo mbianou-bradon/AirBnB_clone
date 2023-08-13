@@ -5,9 +5,13 @@ import uuid
 from datetime import datetime
 import models
 
+format_date = '%Y-%m-%dT%H:%M:%S.%f'
+
+
 class BaseModel:
+
     """
-    Base model class representing the base attributes and methods for all other models.
+    Base model class representing base attributes and methods.
     """
     def __init__(self, *args, **kwargs):
         if kwargs:
@@ -15,7 +19,7 @@ class BaseModel:
                 kwargs.pop('__class__')
             for key, value in kwargs.items():
                 if key == 'created_at' or key == 'updated_at':
-                    setattr(self, key, datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f'))
+                    setattr(self, key, datetime.strptime(value, format_date))
                 else:
                     setattr(self, key, value)
         else:
@@ -28,11 +32,12 @@ class BaseModel:
         """
         Returns a string representation of the BaseModel instance.
         """
-        return "[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__)
+        return("[{}] ({}) {}".format(self.__class__.__name__,
+                                     self.id, self.__dict__))
 
     def save(self):
         """
-        Saves the current instance to the storage and updates the 'updated_at' attribute.
+        Saves current instance to storage and updates 'updated_at' attribute.
         """
         self.updated_at = datetime.now()
         models.storage.new(self)

@@ -94,7 +94,7 @@ class TestFileStorage(unittest.TestCase):
         self.assertEqual(len(reloaded_objects), 1)
         self.assertIn("BaseModel.{}".format(obj.id), reloaded_objects)
 
-        # Check if the reloaded object has the same attributes as the original object
+        # Check if the reloaded object has same attributes as original object
         reloaded_obj = reloaded_objects["BaseModel.{}".format(obj.id)]
         self.assertEqual(reloaded_obj.id, obj.id)
         self.assertEqual(reloaded_obj.created_at, obj.created_at)
