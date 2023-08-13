@@ -3,7 +3,7 @@
 
 import uuid
 from datetime import datetime
-from models.engine.file_storage import storage
+import models
 
 class BaseModel:
     """
@@ -22,7 +22,7 @@ class BaseModel:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = self.created_at
-            storage.new(self)
+            models.storage.new(self)
 
     def __str__(self):
         """
@@ -31,11 +31,12 @@ class BaseModel:
         return "[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__)
 
     def save(self):
-         """
+        """
         Saves the current instance to the storage and updates the 'updated_at' attribute.
         """
         self.updated_at = datetime.now()
-        storage.save()
+        models.storage.new(self)
+        models.storage.save()
 
     def to_dict(self):
         """
