@@ -1,12 +1,14 @@
 import json
 import os
-import models
+from models.base_model import BaseModel
+from models.user import User
 
 
 class FileStorage:
     """Handles serialization and deserialization of instances"""
 
     __file_path = "file.json"
+    __classes = [BaseModel, User]
     __objects = {}
 
     def all(self):
@@ -44,8 +46,7 @@ class FileStorage:
     def _deserialize_instance(self, serialized_instance):
         """Deserialize a dictionary to an instance"""
         class_name = serialized_instance.pop('__class__', None)
-        if class_name in models.classes:
-            instance = models.classes[class_name](**serialized_instance)
-        else:
-            instance = BaseModel(**serialized_instance)
-        return instance
+        for cls in self.__classes:
+            if class_name == cls.__name__:
+                return cls(**serialized_instance)
+        return BaseModel(**serialized_instance)
