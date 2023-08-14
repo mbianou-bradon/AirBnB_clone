@@ -1,7 +1,7 @@
 from model.base_model import BaseModel
 
 
-class Place(BaseMode):
+class Place(BaseModel):
     """Place class that inherits from BaseModel"""
     """
 

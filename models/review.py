@@ -1,7 +1,7 @@
 from models.base_model import BaseModel
 
 
-class Review(BaseMode):
+class Review(BaseModel):
     """Review class that inherits from BaseModel"""
     """
 
