@@ -1,33 +1,51 @@
-#!/usr/bin/python3
-""" File storage classs definition """
-
 import json
+import os
+import models
 
 
 class FileStorage:
+    """Handles serialization and deserialization of instances"""
+
     __file_path = "file.json"
     __objects = {}
 
     def all(self):
+        """Returns the dictionary __objects"""
         return self.__objects
 
     def new(self, obj):
-        key = "{}.{}".format(obj.__class__.__name__, obj.id)
+        """Sets in __objects the obj with key <obj class name>.id"""
+        key = obj.__class__.__name__ + "." + obj.id
         self.__objects[key] = obj
 
     def save(self):
-        obj_dict = {key: obj.to_dict() for key, obj in self.__objects.items()}
+        """Serializes __objects to the JSON file"""
+        serialized_objects = {}
+        for key, value in self.__objects.items():
+            serialized_objects[key] = self._serialize_instance(value)
+
         with open(self.__file_path, 'w') as file:
-            json.dump(obj_dict, file)
+            json.dump(serialized_objects, file)
 
     def reload(self):
-        try:
+        """Deserializes the JSON file to __objects"""
+        if os.path.exists(self.__file_path):
             with open(self.__file_path, 'r') as file:
-                obj_dict = json.load(file)
-                from models.base_model import BaseModel
-                for key, value in obj_dict.items():
-                    cls_name, obj_id = key.split('.')
-                    obj = BaseModel(**value)
-                    self.__objects[key] = obj
-        except FileNotFoundError:
-            pass
+                serialized_objects = json.load(file)
+                for key, value in serialized_objects.items():
+                    self.__objects[key] = self._deserialize_instance(value)
+
+    def _serialize_instance(self, instance):
+        """Serialize an instance to a dictionary"""
+        serialized_instance = instance.to_dict()
+        serialized_instance['__class__'] = type(instance).__name__
+        return serialized_instance
+
+    def _deserialize_instance(self, serialized_instance):
+        """Deserialize a dictionary to an instance"""
+        class_name = serialized_instance.pop('__class__', None)
+        if class_name in models.classes:
+            instance = models.classes[class_name](**serialized_instance)
+        else:
+            instance = BaseModel(**serialized_instance)
+        return instance
